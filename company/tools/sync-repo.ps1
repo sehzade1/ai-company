@@ -27,7 +27,7 @@ function Put($from, $to) {
 
 # 1) Global Claude files
 Put (Join-Path $h 'CLAUDE.md') (Join-Path $Repo 'claude\CLAUDE.md')
-foreach ($s in 'company', 'ask-codex', 'ask-antigravity') {
+foreach ($s in 'company', 'ask-codex', 'ask-antigravity', 'brainstorming', 'systematic-debugging', 'test-driven-development', 'writing-plans', 'verification-before-completion', 'requesting-code-review', 'receiving-code-review', 'dispatching-parallel-agents') {
   Get-ChildItem (Join-Path $h "skills\$s") -Recurse -File | ForEach-Object {
     Put $_.FullName (Join-Path $Repo ('claude\skills\' + $s + $_.FullName.Substring((Join-Path $h "skills\$s").Length)))
   }
@@ -36,7 +36,7 @@ Get-ChildItem (Join-Path $h 'agents') -Filter *.md | Where-Object { $_.Name -mat
   ForEach-Object { Put $_.FullName (Join-Path $Repo "claude\agents\$($_.Name)") }
 
 # 2) Company files
-foreach ($f in 'ORG.md', 'roster.md', 'budgets.json', 'company.ps1') { Put (Join-Path $c $f) (Join-Path $Repo "company\$f") }
+foreach ($f in 'ORG.md', 'roster.md', 'budgets.json', 'company.ps1', 'THIRD_PARTY_NOTICES.md') { Put (Join-Path $c $f) (Join-Path $Repo "company\$f") }
 foreach ($d in 'roles', 'tools', 'meeting') {
   Get-ChildItem (Join-Path $c $d) -Recurse -File | ForEach-Object { Put $_.FullName (Join-Path $Repo ('company\' + $_.FullName.Substring($c.Length + 1))) }
 }

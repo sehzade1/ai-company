@@ -1,0 +1,1 @@
+function memoize(fn){const root=new Map();const END={};return function(...args){let n=root;for(const a of args){if(!n.has(a))n.set(a,new Map());n=n.get(a);}if(n.has(END))return n.get(END);const r=fn.apply(this,args);n.set(END,r);return r;};}

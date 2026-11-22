@@ -31,3 +31,10 @@ Workers sandboxed by default; no bypass/write-escalation flags without the user'
 - Transparent logo/icon needed: generate on plain white, then `python -I {{HOME}}\.claude\company\tools\make-transparent.py IN.png OUT.png --crop` (`--global` for text logos). Inspect the result on a dark background before delivering.
 
 - New project: `powershell -File {{HOME}}\.claude\company\tools\new-project.ps1 -Name <name> [-Type game]` creates a clean folder in D:\Projects (no leftovers from other projects). Project facts go in that project's CLAUDE.md, never in global company files.
+
+## Working methods (adopted from obra/superpowers, MIT)
+- Bug, failing test or odd behaviour: use `systematic-debugging` (root cause before any fix). Do not paste the method into Codex/Gemini briefs (rnd-010: no gain, ~7x prompt size).
+- Before saying "done", "fixed" or "passing": `verification-before-completion` (run the check, show the output).
+- Multi-step work with a spec: `writing-plans`; new feature or product idea: `brainstorming` first.
+- Code: `test-driven-development` where the project has tests; review loop: `requesting-code-review` / `receiving-code-review` (pairs with the cross-model review rule).
+- 2+ independent jobs: `dispatching-parallel-agents` (still respect budgets and the one-image-call-at-a-time rule).

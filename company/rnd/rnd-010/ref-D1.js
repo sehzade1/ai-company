@@ -1,0 +1,1 @@
+function formatPrice(cents){const s=cents<0?"-":"";const a=Math.abs(cents);return s+Math.floor(a/100)+"."+String(a%100).padStart(2,"0")+" TL";}

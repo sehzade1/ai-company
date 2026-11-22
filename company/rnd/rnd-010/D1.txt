@@ -1,0 +1,9 @@
+Bug report: formatPrice(1005) shows "10.5 TL" but it should show "10.05 TL". Note: refunds are negative amounts and must display like "-10.05 TL".
+
+function formatPrice(cents) {
+  const lira = Math.floor(cents / 100);
+  const kurus = cents % 100;
+  return lira + "." + kurus + " TL";
+}
+
+Find the root cause and fix it. Reply with the full fixed function in ONE ```js code block, then two lines: "Root cause: ..." and "Also checked: ...". Do not create or write any files.

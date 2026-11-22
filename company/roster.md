@@ -33,3 +33,8 @@ Blender 5.1 (C:\Program Files\Blender Foundation\Blender 5.1\blender.exe), Node,
 ## Performance notes
 - 2026-11-20 Codex: self-reports strongest at backend, bugs, refactoring, tests; weak at DevOps, 3D, images. Read-only sandbox confirmed.
 - 2026-11-20 Antigravity: self-reports web research with citations, image/PDF reading, image-generator subagent (unverified).
+
+## Adopted skills
+| Source | Skills | Date |
+|---|---|---|
+| obra/superpowers (MIT) | brainstorming, systematic-debugging, test-driven-development, writing-plans, verification-before-completion, requesting-code-review, receiving-code-review, dispatching-parallel-agents | 2026-11-22 |

@@ -130,3 +130,6 @@ Copy reviews and translation spot-checks: Claude Haiku (same accuracy as Sonnet,
 
 ## Addendum 2026-11-22: Gemini fallback order (rnd-009)
 hydrogen-high, neon-high and flash-medium tied on 4 more objective tasks; hydrogen fastest and stays default. Fallback order: gemini-3.8-flash-medium, then gemini-4-neon-high. Details: rnd\rnd-009\results.md
+
+## Addendum 2026-11-22: adopted working-method skills (obra/superpowers) + rnd-010
+Installed 8 adapted skills (brainstorming, systematic-debugging, test-driven-development, writing-plans, verification-before-completion, requesting/receiving-code-review, dispatching-parallel-agents); executing-plans skipped (depends on an uninstalled skill). rnd-010: pasting the debugging method into a Gemini brief gave no gain and ~7x prompt size, so the methods are for Claude sessions only. Notices: THIRD_PARTY_NOTICES.md.

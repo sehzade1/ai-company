@@ -39,6 +39,17 @@ experiments: [`company/rnd/`](company/rnd/).
 | rnd-006 | Plain-background removal for logos works without any AI model |
 | rnd-007 | 3D: Antigravity's Blender scripts ran first try 2/2 (Codex 1/2) |
 | rnd-008 | For checklist-style reviews Haiku matched Sonnet; every Claude subagent call carries ~50k tokens of overhead |
+| rnd-010 | Pasting a debugging method into a Gemini brief gave no gain at ceiling (28/28 vs 27/28) and ~7x prompt size, so method skills stay in Claude sessions |
+
+## Adopted from other repos
+
+| Source | What | How |
+|---|---|---|
+| [obra/superpowers](https://github.com/obra/superpowers) (MIT) | 8 working-method skills: brainstorming, systematic-debugging, test-driven-development, writing-plans, verification-before-completion, requesting/receiving-code-review, dispatching-parallel-agents | Reviewed and adapted (visual-companion server removed, brainstorming trigger narrowed); see [`company/THIRD_PARTY_NOTICES.md`](company/THIRD_PARTY_NOTICES.md) |
+| [Claude Code Game Studios](https://github.com/Donchitos/Claude-Code-Game-Studios) | Game-studio agents | Run as a subsidiary inside game repos, not redistributed |
+
+Scouting rule: third-party agents are read before adoption (licence, security, cost), copied file by file
+(never via their installers), and checked by an R&D experiment when they replace an existing role.
 
 Some test inputs in `company/rnd/` are in Turkish on purpose (the author's language); the results
 are in English.

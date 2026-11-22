@@ -1,0 +1,14 @@
+Bug report: after calling a memoized function with f(1, 2), calling f("1,2") returns the cached result of f(1, 2) instead of computing its own result.
+
+function memoize(fn) {
+  const cache = {};
+  return function (...args) {
+    const key = args.join(",");
+    if (cache[key]) return cache[key];
+    const result = fn(...args);
+    cache[key] = result;
+    return result;
+  };
+}
+
+Find the root cause and fix it. Reply with the full fixed function in ONE ```js code block, then two lines: "Root cause: ..." and "Also checked: ...". Do not create or write any files.
