@@ -38,3 +38,4 @@ Workers sandboxed by default; no bypass/write-escalation flags without the user'
 - Multi-step work with a spec: `writing-plans`; new feature or product idea: `brainstorming` first.
 - Code: `test-driven-development` where the project has tests; review loop: `requesting-code-review` / `receiving-code-review` (pairs with the cross-model review rule).
 - 2+ independent jobs: `dispatching-parallel-agents` (still respect budgets and the one-image-call-at-a-time rule).
+- Real token load: `powershell -File {{HOME}}\.claude\company\company.ps1 usage` (ccusage, local logs, no network). Use it, not the ledger estimates, when judging whether an agent is overloaded.

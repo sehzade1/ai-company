@@ -31,6 +31,11 @@ applies and tests it). Antigravity cannot write files in headless mode (it repli
 | Balance / numbers analysis | Antigravity `data-analyst` | systems-designer | economy-designer |
 | Design, narrative, direction | studio directors and designers (Sonnet) | - | CEO |
 
+## MCP tools in this project
+
+- **godot MCP** (Coding-Solo/godot-mcp 0.1.1, local stdio): launch the editor, run/stop the project, read debug output, create scenes/add nodes, get UIDs. Trial since 2026-11-22: use it when live debug output or scene edits help; keep the headless CLI and the `tests/*_shot.gd` evidence scripts for tests and screenshots. Report to the CEO whether it saved time.
+- **blender MCP** (ahujasid): live Blender control for props.
+
 ## Limits the studio must respect
 
 - **Codex is on a non-paid plan** with a low, unknown limit. Use it for short bug hunts and code

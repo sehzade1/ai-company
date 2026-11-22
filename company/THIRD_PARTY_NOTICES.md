@@ -33,3 +33,8 @@ SOFTWARE.
 ## Claude Code Game Studios
 Used as the System Studio subsidiary inside its own game repository (not redistributed here):
 https://github.com/Donchitos/Claude-Code-Game-Studios
+## ccusage
+https://github.com/ccusage/ccusage (MIT). Installed locally as an npm package (ccusage@20.0.48, --ignore-scripts) in company\vendor\ccusage; not redistributed in this repo. Used read-only with --offline.
+
+## godot-mcp
+https://github.com/Coding-Solo/godot-mcp (MIT). Installed locally (@coding-solo/godot-mcp@0.1.1, --ignore-scripts) in company\vendor\godot-mcp; not redistributed. npm audit (2026-11-22): 3 high findings in @modelcontextprotocol/sdk 0.6.0 (HTTP transport/OAuth issues) and zod (memory on oversized input); not reachable here because the server runs over local stdio only.

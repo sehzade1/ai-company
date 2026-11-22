@@ -41,6 +41,7 @@ experiments: [`company/rnd/`](company/rnd/).
 | rnd-008 | For checklist-style reviews Haiku matched Sonnet; every Claude subagent call carries ~50k tokens of overhead |
 | rnd-010 | Pasting a debugging method into a Gemini brief gave no gain at ceiling (28/28 vs 27/28) and ~7x prompt size, so method skills stay in Claude sessions |
 | rnd-011 | wshobson/agents review briefs on Codex: 27/32 vs our own briefs 29/32, with ~40% more tokens; ours kept |
+| Finance | Real usage via ccusage showed our Antigravity estimates undercounted ~26x (agent-internal tool calls); the main CEO session is by far the biggest consumer |
 
 ## Adopted from other repos
 
@@ -48,6 +49,8 @@ experiments: [`company/rnd/`](company/rnd/).
 |---|---|---|
 | [obra/superpowers](https://github.com/obra/superpowers) (MIT) | 8 working-method skills: brainstorming, systematic-debugging, test-driven-development, writing-plans, verification-before-completion, requesting/receiving-code-review, dispatching-parallel-agents | Reviewed and adapted (visual-companion server removed, brainstorming trigger narrowed); see [`company/THIRD_PARTY_NOTICES.md`](company/THIRD_PARTY_NOTICES.md) |
 | [Claude Code Game Studios](https://github.com/Donchitos/Claude-Code-Game-Studios) | Game-studio agents | Run as a subsidiary inside game repos, not redistributed |
+| [ccusage](https://github.com/ccusage/ccusage) (MIT) | Real token usage per CLI from local logs | Pinned 20.0.48, run with `--offline`; powers `company.ps1 usage` |
+| [godot-mcp](https://github.com/Coding-Solo/godot-mcp) (MIT) | Godot editor/run/debug tools for game projects | Pinned 0.1.1, local stdio only |
 
 Scouting rule: third-party agents are read before adoption (licence, security, cost), copied file by file
 (never via their installers), and checked by an R&D experiment when they replace an existing role.
@@ -76,7 +79,7 @@ are in English.
 ## Daily use
 
 - In any project, non-trivial work follows the company workflow automatically (global `CLAUDE.md`).
-- Finance report: `powershell -File %USERPROFILE%\.claude\company\company.ps1 report`
+- Finance report: `powershell -File %USERPROFILE%\.claude\company\company.ps1 report`; real token use for Claude, Codex and Antigravity from their local logs: `company.ps1 usage` (needs [ccusage](https://github.com/ccusage/ccusage): `npm install --prefix %USERPROFILE%\.claude\company\vendor\ccusage ccusage@20.0.48 --ignore-scripts`)
 - Delegate by hand: `company.ps1 delegate -Agent codex -Role bug-finder -Task "..." -Prompt "..."`
 - Clean new project: `powershell -File %USERPROFILE%\.claude\company\tools\new-project.ps1 -Name my-app [-Type game]`
 - Game projects can run [Claude Code Game Studios](https://github.com/Donchitos/Claude-Code-Game-Studios)

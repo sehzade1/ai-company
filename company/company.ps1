@@ -9,7 +9,7 @@
   company.ps1 report            # full finance report + reassignment recommendations
 #>
 param(
-  [Parameter(Position = 0, Mandatory = $true)][ValidateSet('delegate', 'log', 'status', 'report')][string]$Command,
+  [Parameter(Position = 0, Mandatory = $true)][ValidateSet('delegate', 'log', 'status', 'report', 'usage')][string]$Command,
   [string]$Agent,
   [string]$Department = 'general',
   [string]$Task = '',
@@ -69,6 +69,28 @@ function Get-Fallbacks($agent) {
   if ($cfg -and $cfg.fallback) { return ($cfg.fallback -join ', ') }
   return '(none)'
 }
+function Get-RealUsage([string]$since) {
+  # Real token counts from the CLIs' own local logs via ccusage (pinned 20.0.48, --offline: no network).
+  $exe = Join-Path $Home_ 'vendor\ccusage\node_modules\@ccusage\ccusage-win32-x64\bin\ccusage.exe'
+  if (-not (Test-Path $exe)) { return $null }
+  $rows = foreach ($a in 'claude', 'codex', 'antigravity') {
+    $ErrorActionPreference = 'Continue'
+    $raw = & $exe $a daily --offline --json --since $since 2>$null | Out-String
+    $ErrorActionPreference = 'Stop'
+    try { $j = $raw | ConvertFrom-Json } catch { continue }
+    $d = @($j.daily)
+    [pscustomobject]@{
+      Agent      = $a
+      Input      = ($d | Where-Object { $_.PSObject.Properties['inputTokens'] } | Measure-Object inputTokens -Sum).Sum
+      Output     = ($d | Where-Object { $_.PSObject.Properties['outputTokens'] } | Measure-Object outputTokens -Sum).Sum
+      CacheWrite = ($d | Where-Object { $_.PSObject.Properties['cacheCreationTokens'] } | Measure-Object cacheCreationTokens -Sum).Sum
+      CacheRead  = ($d | Where-Object { $_.PSObject.Properties['cacheReadTokens'] } | Measure-Object cacheReadTokens -Sum).Sum
+      Total      = ($d | Where-Object { $_.PSObject.Properties['totalTokens'] } | Measure-Object totalTokens -Sum).Sum
+      ApiEquivUSD = [math]::Round(($d | ForEach-Object { foreach ($p in 'totalCost', 'costUSD', 'cost') { if ($_.PSObject.Properties[$p]) { [double]$_.$p; break } } } | Measure-Object -Sum).Sum, 2)
+    }
+  }
+  return $rows
+}
 
 switch ($Command) {
 
@@ -78,6 +100,13 @@ switch ($Command) {
     "Logged $Tokens tokens for $Agent."
   }
 
+  'usage' {
+    $today = Get-Date -Format 'yyyyMMdd'; $week = (Get-Date).AddDays(-6).ToString('yyyyMMdd')
+    "=== REAL USAGE (ccusage, local CLI logs) ==="
+    "Today:"; Get-RealUsage $today | Format-Table -AutoSize | Out-String
+    "Last 7 days:"; Get-RealUsage $week | Format-Table -AutoSize | Out-String
+    'ApiEquivUSD = what the tokens would cost on the pay-as-you-go API; on subscriptions it is not billed. Antigravity models are unpriced. Ledger budgets (status/report) are per-task estimates; use these numbers for real load.'
+  }
   'status' {
     $budgets.agents.PSObject.Properties.Name | ForEach-Object { Get-BudgetState $_ } | Format-Table -AutoSize
   }
@@ -111,6 +140,8 @@ switch ($Command) {
       if ($ts -match 'Authentication is required') { '  not logged in (user must run: testsprite setup)' } else { $ts }
     } else { '  testsprite CLI not installed' }
     ''
+    'Real usage today (ccusage, local logs):'
+    $ru = Get-RealUsage (Get-Date -Format 'yyyyMMdd'); if ($ru) { $ru | Format-Table -AutoSize | Out-String } else { '  ccusage not installed' }
     'Note: tokens marked estimated=True are chars/4 approximations; only Codex reports real counts. Budgets are user-defined in budgets.json, not read from provider quotas.'
   }
 
