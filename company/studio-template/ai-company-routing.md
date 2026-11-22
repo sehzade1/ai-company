@@ -50,3 +50,9 @@ applies and tests it). Antigravity cannot write files in headless mode (it repli
 security, devops) are in `.claude/agents-archive/` — see its README to restore one. The user
 plans future Unity/Unreal and online-multiplayer projects; the full 49-agent set is kept in
 `~/.claude/company/studio-template/agents/` for those.
+
+## Waiting on background jobs (incident 2026-11-22)
+Never write an open-ended wait loop (`until grep ...; do sleep; done`) on a background task's output. A test crashed before printing its summary word, the loop waited forever, and the ui-programmer subagent blocked behind it (twice).
+- Prefer the harness: run the job in the background and wait for its completion notification; or wait for the exit marker (`[exited with code`) as well as the success/failure words.
+- Every manual wait needs a timeout (e.g. `timeout 600 bash -c 'until ...; do sleep 3; done'`) and must print what it found when it gives up.
+- Test scripts must print their final PASS/FAIL line even when a step errors (wrap steps, report the failure, then quit).

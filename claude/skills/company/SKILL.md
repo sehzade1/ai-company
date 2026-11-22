@@ -39,3 +39,7 @@ Workers sandboxed by default; no bypass/write-escalation flags without the user'
 - Code: `test-driven-development` where the project has tests; review loop: `requesting-code-review` / `receiving-code-review` (pairs with the cross-model review rule).
 - 2+ independent jobs: `dispatching-parallel-agents` (still respect budgets and the one-image-call-at-a-time rule).
 - Real token load: `powershell -File {{HOME}}\.claude\company\company.ps1 usage` (ccusage, local logs, no network). Use it, not the ledger estimates, when judging whether an agent is overloaded.
+
+- Background work: never write an open-ended wait loop on a job's output; wait for the completion notification or the exit marker, always with a timeout. (Incident 2026-11-22: a crashed Godot test never printed its summary and a subagent blocked forever.)
+
+- Long project from a master list: use the `producer-loop` skill (Gemini Producer gives the prompts, CEO executes, major decisions batched for the user).

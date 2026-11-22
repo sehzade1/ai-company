@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
   Start a new, clean project for the AI company. Nothing from older projects is copied in.
 .EXAMPLE

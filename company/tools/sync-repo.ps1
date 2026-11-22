@@ -27,7 +27,7 @@ function Put($from, $to) {
 
 # 1) Global Claude files
 Put (Join-Path $h 'CLAUDE.md') (Join-Path $Repo 'claude\CLAUDE.md')
-foreach ($s in 'company', 'ask-codex', 'ask-antigravity', 'brainstorming', 'systematic-debugging', 'test-driven-development', 'writing-plans', 'verification-before-completion', 'requesting-code-review', 'receiving-code-review', 'dispatching-parallel-agents') {
+foreach ($s in 'company', 'ask-codex', 'ask-antigravity', 'brainstorming', 'systematic-debugging', 'test-driven-development', 'writing-plans', 'verification-before-completion', 'requesting-code-review', 'receiving-code-review', 'dispatching-parallel-agents', 'producer-loop') {
   Get-ChildItem (Join-Path $h "skills\$s") -Recurse -File | ForEach-Object {
     Put $_.FullName (Join-Path $Repo ('claude\skills\' + $s + $_.FullName.Substring((Join-Path $h "skills\$s").Length)))
   }

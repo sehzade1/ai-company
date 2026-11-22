@@ -83,3 +83,6 @@ MCP: `blender` (Blender live control via uv blender-mcp) is enabled in the game 
 
 ## Engine MCPs
 Game project: godot MCP (Coding-Solo/godot-mcp 0.1.1, pinned, local stdio; installed in company\vendor\godot-mcp; trial) + blender MCP. Future: Unity -> CoplayDev/unity-mcp, Unreal -> ChiR24/Unreal_mcp (both MIT). Rule for any MCP: read the source, pin a version, install with --ignore-scripts, stdio only, note npm audit findings.
+
+## Producer loop (autonomous projects)
+Gemini (role `antigravity/producer`) reads the user's master list, the checkpoint and the CEO's last report, reviews the work and writes the next prompt(s); minor decisions it takes itself, major ones go to `production/bekleyen-kararlar.md` for the user to answer in one batch. The CEO executes with the company, reports, repeats until the list is done. Tools: `tools\producer.ps1` (next | brainstorm), `tools\limit-check.ps1` (Claude 5-hour block end via ccusage; resume = end + 1 min). Skill: `producer-loop`; start in the project session with `/loop /producer-loop`.

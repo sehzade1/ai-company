@@ -81,6 +81,7 @@ are in English.
 - In any project, non-trivial work follows the company workflow automatically (global `CLAUDE.md`).
 - Finance report: `powershell -File %USERPROFILE%\.claude\company\company.ps1 report`; real token use for Claude, Codex and Antigravity from their local logs: `company.ps1 usage` (needs [ccusage](https://github.com/ccusage/ccusage): `npm install --prefix %USERPROFILE%\.claude\company\vendor\ccusage ccusage@20.0.48 --ignore-scripts`)
 - Delegate by hand: `company.ps1 delegate -Agent codex -Role bug-finder -Task "..." -Prompt "..."`
+- **Autonomous mode:** in a project session run `/loop /producer-loop`. A Gemini *Producer* reads your master list, brainstorms it with the CEO, writes the next prompt, reviews each work report and keeps going until the list is done; minor decisions it takes itself, major ones are collected for you to answer in one batch; Claude usage limits pause the loop until the 5-hour window resets.
 - Clean new project: `powershell -File %USERPROFILE%\.claude\company\tools\new-project.ps1 -Name my-app [-Type game]`
 - Game projects can run [Claude Code Game Studios](https://github.com/Donchitos/Claude-Code-Game-Studios)
   as a subsidiary; routing rules: `company/studio-template/ai-company-routing.md`.
