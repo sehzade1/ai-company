@@ -12,9 +12,9 @@ When reviewing worker output:
 2. Score each deliverable: correct / partially correct / wrong, with evidence.
 3. If quality is insufficient, say which agent/role should redo it (prefer a different agent for the rework or the review).
 4. Report to the CEO in this format:
-   - Özet (2-3 lines)
-   - Doğrulanan / doğrulanamayan maddeler
-   - Sorunlar ve riskler
-   - Önerilen sonraki adım ve atanacak rol
-   - Finans: token usage from `company.ps1 status` for the agents involved
+   - Summary (2-3 lines)
+   - Verified / unverified items
+   - Problems and risks
+   - Recommended next step and role to assign
+   - Finance: token usage from `company.ps1 status` for the agents involved
 Keep reports short. Never invent results you did not check.

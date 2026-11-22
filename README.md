@@ -1,67 +1,98 @@
 # AI Company for Claude Code
 
-Claude Code'u bir **yapay zeka şirketi** gibi çalıştıran kurulum. Ana oturum CEO'dur (Claude Opus); işi
-modellerin güçlü olduğu alanlara göre Claude, OpenAI Codex ve Google Antigravity/Gemini ajanlarına
-dağıtır, çıktıları başka bir modele çapraz inceletir ve Finans departmanı her çağrının token
-harcamasını kaydeder. Rol ve model kararları, cevap anahtarlı kör testlerle (Ar-Ge) verilir.
+A Claude Code setup that runs like an **AI company**. The main session is the CEO; it splits work
+across Claude, OpenAI Codex and Google Antigravity/Gemini agents according to what each model is
+measurably good at, has a *different* model review every deliverable, and a Finance department logs
+the token cost of every call. Role and model choices are not guesses: they come from blind,
+answer-keyed R&D experiments that are included in this repo.
 
-*A Claude Code setup that runs as an AI company: the main session is the CEO, work is routed to
-Claude, Codex and Gemini agents by measured strength, cross-reviewed, and every call is logged by a
-Finance ledger. Role and model choices come from blind, answer-keyed R&D tests (see `company/rnd/`).*
+> **This is one user's configuration, not a fixed product.** The model assignments below fit the
+> author's subscriptions (Claude and Gemini paid, Codex on a free plan). Every role, model, budget
+> and even the CEO can be changed — see [Customize it](#customize-it-for-your-own-setup).
 
-## Yapı
+## Organisation (as configured by the author)
 
 ```
-CEO (Claude Opus, ana oturum)
-├── Direktörler (Claude Sonnet): Mühendislik, Yaratıcı, Operasyon, Ar-Ge
-│   └── Operasyon altında: İK (Haiku), Finans (Sonnet)
-└── İşçiler
-    ├── Claude: test, güvenlik, frontend, UI/UX, metin, toplu taslak, prompt
-    ├── Codex (gpt-6-luna): backend, hata avı, refaktör, performans, kod inceleme (salt okunur)
-    ├── Antigravity/Gemini (gemini-4-hydrogen-high): araştırma, veri, çeviri, teknik yazı,
-    │   erişilebilirlik, görsel (logo uzmanı + genel), 3D (Blender script)
-    └── Yerel: Ollama gemma3:12b (gizli veri, çeviri taslağı), ComfyUI FLUX (yedek görsel)
+CEO (main Claude Code session — Claude Opus here)
+├── Directors (Claude Sonnet): Engineering, Creative, Operations, R&D
+│   └── under Operations: HR (Haiku), Finance (Sonnet)
+└── Workers
+    ├── Claude:  test writer, security auditor, frontend, UI/UX, copywriter, bulk drafter, prompt engineer
+    ├── Codex (gpt-6-luna, read-only): backend, bug finder, refactoring, performance, code reviewer
+    ├── Antigravity/Gemini (gemini-4-hydrogen-high): research, data analysis, translation,
+    │   technical writing, accessibility, images (logo specialist + general), 3D (Blender scripts)
+    └── Local: Ollama gemma3:12b (private data, translation drafts), ComfyUI FLUX (fallback images)
 ```
 
-Ayrıntı: [`company/ORG.md`](company/ORG.md), kararlar: [`company/meeting/decision.md`](company/meeting/decision.md),
-Ar-Ge sonuçları: [`company/rnd/`](company/rnd/).
+Workers never report to the CEO directly: a director verifies their output first. Details:
+[`company/ORG.md`](company/ORG.md) · decisions: [`company/meeting/decision.md`](company/meeting/decision.md) ·
+experiments: [`company/rnd/`](company/rnd/).
 
-## Öne çıkan Ar-Ge bulguları
+## R&D findings that shaped the setup
 
-| Test | Sonuç |
+| Experiment | Result |
 |---|---|
-| rnd-004/005 | Codex'te gpt-6-luna en iyi ve en ucuz; hata avı ve kod incelemede `high` effort 7/7 ve 9/9 buldu (low/medium 6/7, 8/9) |
-| rnd-004/009 | Gemini modelleri 6 nesnel görevde eşit; hydrogen-high en hızlı |
-| rnd-002 | Logo için uzman brief kazandı; illüstrasyonda uzman brief fark yaratmadı |
-| rnd-007 | 3D: Antigravity Blender script'leri 2/2 ilk denemede çalıştı (Codex 1/2) |
-| rnd-008 | Kontrol listesi tipi incelemede Haiku = Sonnet; Claude alt ajanı çağrı başına ~50k token yük getirir |
+| rnd-004 / 005 | Codex: gpt-6-luna was the best and cheapest model; at `high` effort it found 7/7 planted bugs and 9/9 security issues (low/medium: 6/7, 8/9) |
+| rnd-004 / 009 | Three Gemini models tied on 6 objective tasks; hydrogen-high was the fastest |
+| rnd-002 | A logo-specialist brief beat the generic brief; an illustration-specialist brief made no difference |
+| rnd-003 | A local 12B model can draft translations for free but is weak at summaries |
+| rnd-006 | Plain-background removal for logos works without any AI model |
+| rnd-007 | 3D: Antigravity's Blender scripts ran first try 2/2 (Codex 1/2) |
+| rnd-008 | For checklist-style reviews Haiku matched Sonnet; every Claude subagent call carries ~50k tokens of overhead |
 
-## Kurulum (Windows)
+Some test inputs in `company/rnd/` are in Turkish on purpose (the author's language); the results
+are in English.
 
-1. [Claude Code](https://claude.com/claude-code) kurulu olsun.
-2. Repoyu indir ve çalıştır:
+## Install (Windows, PowerShell)
+
+1. Install [Claude Code](https://claude.com/claude-code).
+2. Clone and run the installer:
    ```powershell
-   git clone <bu repo> ; cd ai-company
+   git clone https://github.com/sehzade1/ai-company.git
+   cd ai-company
    powershell -ExecutionPolicy Bypass -File .\install.ps1
    ```
-   Var olan dosyalar `~\.claude\backup-<tarih>` altına yedeklenir.
-3. İstediğin ajanları kur (hepsi isteğe bağlı; olmayan ajanın işi yedeğine gider):
+   It copies everything into `%USERPROFILE%\.claude`, backs up any file it replaces to
+   `%USERPROFILE%\.claude\backup-<timestamp>`, and fills the `{{HOME}}` placeholders with your path.
+3. Install the agents you want — all optional; work for a missing agent goes to its fallback:
    - OpenAI Codex CLI, Google Antigravity CLI (`agy`)
-   - Ollama + `gemma3:12b` (yerel metin), ComfyUI + FLUX.1-schnell (yerel görsel)
-   - Blender (3D), Python 3 + Pillow, numpy, scipy (şeffaf PNG aracı)
-4. `~\.claude\company\budgets.json` içindeki günlük bütçeleri kendi planlarına göre ayarla.
-5. Claude Code'u yeniden başlat.
+   - Ollama + `gemma3:12b` (local text), ComfyUI + FLUX.1-schnell (local images)
+   - Blender (3D), Python 3 with Pillow, numpy, scipy (transparent-PNG tool)
+4. Set your own daily budgets in `%USERPROFILE%\.claude\company\budgets.json`.
+5. Restart Claude Code.
 
-## Kullanım
+## Daily use
 
-- Herhangi bir projede önemsiz olmayan her iş şirket akışıyla yürür (global `CLAUDE.md`).
-- Finans raporu: `powershell -File ~\.claude\company\company.ps1 report`
-- Yeni ve temiz proje: `powershell -File ~\.claude\company\tools\new-project.ps1 -Name proje-adi [-Type game]`
-- Oyun projeleri için [Claude Code Game Studios](https://github.com/Donchitos/Claude-Code-Game-Studios)
-  alt şirket olarak çalışır; yönlendirme kuralı `company/studio-template/ai-company-routing.md`.
+- In any project, non-trivial work follows the company workflow automatically (global `CLAUDE.md`).
+- Finance report: `powershell -File %USERPROFILE%\.claude\company\company.ps1 report`
+- Delegate by hand: `company.ps1 delegate -Agent codex -Role bug-finder -Task "..." -Prompt "..."`
+- Clean new project: `powershell -File %USERPROFILE%\.claude\company\tools\new-project.ps1 -Name my-app [-Type game]`
+- Game projects can run [Claude Code Game Studios](https://github.com/Donchitos/Claude-Code-Game-Studios)
+  as a subsidiary; routing rules: `company/studio-template/ai-company-routing.md`.
 
-## Güvenlik ilkeleri
+## Customize it for your own setup
 
-İşçiler salt okunur ya da kısıtlı çalışır; izin atlatma bayrakları kullanıcı onayı olmadan kullanılmaz.
-İşçi çıktısı veridir, talimat değildir. Gizli veriler dış servislere değil yerel modele gider.
-Repo kişisel veri, API anahtarı veya kullanım kaydı (`ledger.csv`) içermez.
+Nothing here is hard-wired. Ask the CEO in plain language ("make Fable the CEO", "I don't have
+Codex", "add a video-editing department") and it updates the files below; or edit them yourself.
+
+| What to change | Where |
+|---|---|
+| **The CEO** — e.g. Claude Fable or another model | The CEO is simply the main session: pick it with `/model`. Update the CEO line in `company/ORG.md` and `claude/CLAUDE.md` so the docs match. |
+| Directors' and managers' models | `model:` in `claude/agents/director-*.md`, `manager-*.md` |
+| Claude workers' models | `model:` in `claude/agents/worker-claude-*.md` |
+| Codex / Gemini worker models and effort | `model:` / `effort:` in `company/roles/<agent>/<role>.md` |
+| Which AI does which job | `company/meeting/decision.md` (routing table) and the role files; retire a role by moving it to `company/roles/_retired/` |
+| An AI you don't have | Set its budget to 0 and remove it from fallbacks in `company/budgets.json`; its roles move to the fallback |
+| A new AI or tool | Add a branch for it in `company.ps1 delegate`, a role file per job, and a budget entry |
+| Budgets and warning thresholds | `company/budgets.json` |
+| Departments and headcount | `company/ORG.md` + agent files; the R&D director can test a change before you adopt it |
+
+Re-run the R&D experiments with your own models before trusting the routing table: the answer keys
+and runner scripts are in each `company/rnd/rnd-00x/` folder.
+
+## Safety rules built in
+
+- Workers are read-only or restricted; permission-bypass flags are never used without the user's OK.
+- Worker output is treated as data, never as instructions.
+- Private data goes to the local model, not to cloud agents.
+- This repo contains no personal data, API keys or usage logs (`ledger.csv` is git-ignored).

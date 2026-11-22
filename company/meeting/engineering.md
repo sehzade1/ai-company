@@ -1,48 +1,48 @@
-# Mühendislik Direktörü Önerisi: İşçi Ajan Kadrosu (20 rol)
+# Engineering Director Proposal: Worker Agent Roster (20 roles)
 
-Bakış açısı: kod kalitesi, testler, hatalar, güvenlik. Temel kural: aynı türdeki işin yazarı ve gözden geçireni aynı modelde olmaz (çapraz inceleme).
+Perspective: code quality, tests, bugs, security. Core rule: the author and the reviewer for the same type of work are never on the same model (cross-review).
 
-## Kanıt (tek Codex yoklaması, öz-beyan verisi, doğrulanmadı)
-- Codex (gpt-6-luna) kendini en güçlü saydığı alanlar: backend kod analizi, hata bulma, refactoring, test yazma, frontend kod analizi/düzenleme.
-- En zayıf saydığı alanlar: servis çalıştırma/deploy gerektiren DevOps, görsel iterasyon isteyen 3D işi, görsel üretimi.
-- Kısıt: mevcut sandbox **salt-okunur**, ağ kısıtlı. Dosya yazamıyor, build/test çalıştıramıyor. Yazar rolleri bu yüzden ya yama (diff) üretir ve Claude uygular, ya da kullanıcı onayıyla yazma izinli sandbox açılır. **Test edilmeli.**
-- Yoklama maliyeti: 4.392 token (Codex günlük 8.611/500.000, %1,7).
+## Evidence (single Codex probe, self-reported data, unverified)
+- Areas where Codex (gpt-6-luna) rates itself strongest: backend code analysis, bug finding, refactoring, test writing, frontend code analysis/editing.
+- Areas where it rates itself weakest: DevOps requiring running/deploying services, 3D work requiring visual iteration, image generation.
+- Constraint: the current sandbox is **read-only**, with restricted network access. It cannot write files or run builds/tests. Therefore, author roles either produce a patch (diff) and Claude applies it, or a write-enabled sandbox is opened with user approval. **Needs testing.**
+- Probe cost: 4,392 tokens (Codex daily 8,611/500,000, 1.7%).
 
-## Atama tablosu
+## Assignment table
 
-| Model | Rol | Gerekçe | Güven |
+| Model | Role | Rationale | Confidence |
 |---|---|---|---|
-| Claude | Kod gözden geçirici (code reviewer) | Codex backend'ini ve Antigravity frontend'ini inceler; kendi yazdığı kod yok, bu yüzden çapraz kural sağlanıyor | high |
-| Claude | Güvenlik denetçisi | Tam araç erişimi var: bağımlılık taraması çalıştırabilir, istismarı yeniden üretebilir. Yazar olarak Codex ve Antigravity'yi denetler | high |
-| Claude | Test yazarı | Testleri gerçekten çalıştırabilen tek aktif model (Codex sandbox'ı çalıştıramıyor). Testlerin Codex backend'inden ayrı bir modelde yazılması kör noktaları azaltır | high |
-| Claude | DevOps/CI | Komut çalıştırma ve dosya yazma gerektiriyor. Codex bunu zayıf yanı olarak kendisi söyledi. CI yapılandırmasını Codex (bug finder) inceler | medium |
-| Claude | Erişilebilirlik denetçisi | Antigravity'nin frontend ve UI işini başka bir model incelemiş olur. Tarayıcı aracıyla gerçek DOM kontrolü yapılabilir | medium |
-| Codex | Backend geliştirici | Öz-beyanda en güçlü alan, gerçek token sayımı var. İncelemeyi Claude yapar, testleri Claude yazar | high |
-| Codex | Refactoring uzmanı | Öz-beyanda güçlü. Davranış korunmasını Claude'un testleri doğrular | high |
-| Codex | Hata avcısı (bug finder) | Öz-beyanda güçlü. Yalnızca başka modellerin kodunda (Antigravity frontend/3D, Claude CI, Kimi script'leri) çalışır, Codex backend'inde çalışmaz | medium |
-| Codex | Performans optimizasyoncusu | Kod analizi güçlü, ancak ölçüm (profiling) çalıştıramıyor. Benchmark'ı Claude koşar. Test edilmeli | medium |
-| Codex | Veri analisti | Python/SQL analiz kodu yazmak koda yakın bir iş. Sandbox'ta veriye erişip erişemediği test edilmeli | low |
-| Antigravity | Frontend geliştirici | Gemini'nin çok kipli (multimodal) yapısı UI'ya uygun. Kod incelemesini Claude, hata avını Codex, erişilebilirlik denetimini Claude yapar. Kod kalitesi test edilmeli | medium |
-| Antigravity | UI/UX tasarımcı | Görsel girdiyi değerlendirebilir. Tasarım çıktısını uygulayan da Antigravity olduğu için tasarımı Claude (erişilebilirlik) inceler | medium |
-| Antigravity | 3D modelci (Blender Python / three.js / OpenSCAD) | Render görüntüsüne bakıp iterasyon yapabilmesi bekleniyor, Codex ise bunu zayıf yanı olarak belirtti. Kodu Codex hata avcısı inceler. `agy -p` ile görsel geri bildirim döngüsü test edilmeli | low |
-| Antigravity | Görsel üretici | Google ekosistemi bunu mümkün kılabilir, ancak `agy -p` CLI'ının görsel dosya üretip üretemediği bilinmiyor. Test edilmeli | low |
-| Antigravity | Araştırmacı | ORG'da Research başkanı, uzun bağlam ve web desteği var. İddialarını Claude kaynak kontrolüyle doğrular | high |
-| Kimi (PENDING LOGIN) | Teknik yazar | Doküman ve README taslakları hacimli ve ucuz iş. Teknik doğruluğu Claude code reviewer kontrol eder | low |
-| Kimi (PENDING LOGIN) | Çevirmen | ORG'da Operations, çeviri ve toplu iş için tanımlı. Örneklemeyle Antigravity kontrol eder | low |
-| Kimi (PENDING LOGIN) | Metin yazarı (copywriter) | Taslak üretimi ucuz ve hacimli. Marka ve ton kontrolü yaratıcı ekipte kalır | low |
-| Kimi (PENDING LOGIN) | Prompt mühendisi | Diğer ajanlar için görev şablonları yazar. Şablonları çalıştıran modeller çıktıyı sınar. Test edilmeli | low |
-| Kimi (PENDING LOGIN) | Ürün yöneticisi | Spec ve backlog taslağı çıkarır. Nihai karar CEO'da kalır, teknik fizibiliteyi Mühendislik onaylar | low |
+| Claude | Code reviewer | Reviews Codex's backend and Antigravity's frontend; writes no code of its own, so the cross-review rule is satisfied | high |
+| Claude | Security auditor | Has full tool access: can run dependency scans and reproduce exploits. Audits Codex and Antigravity as authors | high |
+| Claude | Test author | The only active model that can actually run tests (Codex's sandbox cannot run them). Writing tests on a separate model from Codex's backend reduces blind spots | high |
+| Claude | DevOps/CI | Requires running commands and writing files. Codex stated this itself as a weak area. Codex (bug finder) reviews the CI configuration | medium |
+| Claude | Accessibility auditor | Ensures Antigravity's frontend and UI work is reviewed by another model. Real DOM inspection can be done via the browser tool | medium |
+| Codex | Backend developer | Strongest area in self-report, with actual token counts. Claude performs the review, and Claude writes the tests | high |
+| Codex | Refactoring specialist | Strong in self-report. Claude's tests verify behavior preservation | high |
+| Codex | Bug finder | Strong in self-report. Works only on other models' code (Antigravity frontend/3D, Claude CI, Kimi scripts), not on Codex's backend | medium |
+| Codex | Performance optimizer | Strong at code analysis, but cannot run profiling. Claude runs the benchmarks. Needs testing | medium |
+| Codex | Data analyst | Writing Python/SQL analysis code is close to coding work. Needs testing whether it can access data in the sandbox | low |
+| Antigravity | Frontend developer | Gemini's multimodal architecture suits UI work. Claude performs code review, Codex performs bug finding, and Claude performs accessibility auditing. Code quality needs testing | medium |
+| Antigravity | UI/UX designer | Can evaluate visual input. Since Antigravity also implements the design output, Claude (accessibility) reviews the design | medium |
+| Antigravity | 3D modeler (Blender Python / three.js / OpenSCAD) | Expected to inspect rendered images and iterate, whereas Codex noted this as a weak area. Codex bug finder reviews the code. The visual feedback loop with `agy -p` needs testing | low |
+| Antigravity | Image generator | The Google ecosystem may make this possible, though it is unknown whether the `agy -p` CLI can generate image files. Needs testing | low |
+| Antigravity | Researcher | Head of Research in ORG, with long-context and web support. Claude verifies its claims via source checking | high |
+| Kimi (PENDING LOGIN) | Technical writer | Drafting docs and READMEs is high-volume, low-cost work. Claude code reviewer checks technical accuracy | low |
+| Kimi (PENDING LOGIN) | Translator | Defined in ORG for Operations, translation, and batch work. Antigravity spot-checks by sampling | low |
+| Kimi (PENDING LOGIN) | Copywriter | Drafting is low-cost and high-volume. Brand and tone review remains with the creative team | low |
+| Kimi (PENDING LOGIN) | Prompt engineer | Writes task templates for other agents. The models running the templates validate the output. Needs testing | low |
+| Kimi (PENDING LOGIN) | Product manager | Drafts specs and backlogs. Final decisions remain with the CEO, and Engineering approves technical feasibility | low |
 
-## Çapraz inceleme eşleşmeleri (yazar → inceleyen)
-- Backend/refactor/performans (Codex) → kod incelemesi, test ve güvenlik (Claude)
-- Frontend/UI/3D (Antigravity) → hata avı (Codex), kod incelemesi ve erişilebilirlik (Claude)
-- DevOps/CI (Claude) → hata avı (Codex)
-- Testler (Claude) → Codex hata avcısı test kapsamı boşluklarını işaretler
-- Doküman/çeviri/prompt (Kimi) → teknik doğruluk (Claude), çeviri örneklemesi (Antigravity)
-- Araştırma (Antigravity) → kaynak doğrulama (Claude)
+## Cross-review pairings (author → reviewer)
+- Backend/refactor/performance (Codex) → code review, testing, and security (Claude)
+- Frontend/UI/3D (Antigravity) → bug finding (Codex), code review and accessibility (Claude)
+- DevOps/CI (Claude) → bug finding (Codex)
+- Tests (Claude) → Codex bug finder flags test coverage gaps
+- Docs/translation/prompts (Kimi) → technical accuracy (Claude), translation sampling (Antigravity)
+- Research (Antigravity) → source verification (Claude)
 
-## Riskler ve açık noktalar
-1. Claude'da beş inceleme ve altyapı rolü toplanıyor, bu da bir darboğaz riski. Finans, Claude yükünü izlemeli. Yedek inceleyici Codex olabilir, ama Codex'in yazdığı kod hariç.
-2. Codex'in sandbox'ı salt-okunur olduğundan yazar rolleri yama üretir. Yazma izni yalnızca kullanıcının açık onayıyla verilebilir.
-3. Kimi giriş yapana kadar 5 rol boşta kalıyor. Geçici yedekler: teknik yazar Claude, çeviri Antigravity, diğerleri Antigravity veya Claude. Bu durumda çapraz kural yeniden kontrol edilmeli.
-4. "Test edilmeli" ile işaretli bütün atamalar ilk gerçek görevden sonra roster'daki performans notlarına göre yeniden değerlendirilmeli.
+## Risks and open items
+1. Five review and infrastructure roles are concentrated in Claude, creating a bottleneck risk. Finance should monitor Claude's load. Codex can serve as a backup reviewer, except for code written by Codex.
+2. Because Codex's sandbox is read-only, its author roles produce patches. Write permission can only be granted with explicit user approval.
+3. Until Kimi logs in, 5 roles remain vacant. Temporary backups: Claude for technical writer, Antigravity for translation, and Antigravity or Claude for the others. In that case, the cross-review rule must be re-checked.
+4. All assignments marked 'Needs testing' should be re-evaluated after the first real task based on performance notes in the roster.

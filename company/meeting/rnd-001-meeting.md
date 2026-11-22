@@ -1,29 +1,29 @@
-# Fiyat/performans toplantısı — rnd-001 (2026-11-20)
+# Price/performance meeting — rnd-001 (2026-11-20)
 
-Katılımcılar: Ar-Ge Direktörü (öneri), İK Müdürü, Finans Müdürü. Karar: CEO.
-Girdi: rnd\proposal-rnd-001.md, rnd\experiments.md, ledger.csv. CEO illüstrasyon çiftini (C1/C2) bizzat inceledi.
+Participants: R&D Director (proposal), HR Manager, Finance Manager. Decision: CEO.
+Input: rnd\proposal-rnd-001.md, rnd\experiments.md, ledger.csv. The CEO personally reviewed the illustration pair (C1/C2).
 
-## Oylar
-| Konu | Ar-Ge | İK | Finans | CEO kararı |
+## Votes
+| Topic | R&D | HR | Finance | CEO decision |
 |---|---|---|---|---|
-| image-illustration ayrı rol | Onay | Pilot-daha | Onay | ONAY |
-| image-logo ayrı rol | Onay | Pilot-daha | Pilot-daha | PİLOT-DAHA (rnd-image-logo deneysel kalır) |
-| Foto için uzman | Bölme yok | — | Ret | RED (image-generator foto için kalır; rnd-image-photo arşivlendi) |
-| Takip pilotu rnd-002 | ~50k | Koşullu onay | ~36k tavan | ONAY, 36k tavan, kullanıcının başlat onayıyla |
+| image-illustration separate role | Approve | Pilot-more | Approve | APPROVED |
+| image-logo separate role | Approve | Pilot-more | Pilot-more | PILOT-MORE (rnd-image-logo remains experimental) |
+| Specialist for photo | No split | — | Reject | REJECTED (image-generator remains for photo; rnd-image-photo archived) |
+| Follow-up pilot rnd-002 | ~50k | Conditional approval | ~36k cap | APPROVED, 36k cap, with user's start approval |
 
-## Gerekçe
-- İllüstrasyonda genel rol bir kategori hatası yaptı (illüstrasyon yerine fotoğraf + uydurma tabela). Bu zevk farkı değil, CEO doğruladı. Kabul edilen teslim başına maliyet ~3.9k → ~1.56k (Finans, ledger ile doğrulandı). Yapısal maliyet: +1 rol.
-- Logo farkı (3'e 4) gürültü sınırında; tek örnek yetersiz.
-- Ar-Ge'nin betik hatasıyla harcanan ~9.1k token deney maliyetidir, role yazılmaz.
+## Rationale
+- For illustration, the general role made a category error (photo instead of illustration + fabricated sign). This is not a difference in taste; the CEO confirmed. Cost per accepted deliverable ~3.9k → ~1.56k (verified by Finance via ledger). Structural cost: +1 role.
+- The logo difference (3 vs. 4) is within the noise margin; a single sample is insufficient.
+- The ~9.1k tokens spent due to R&D's script error are an experiment cost and are not attributed to the role.
 
-## Uygulanan değişiklikler
-- roles\antigravity\image-illustration.md üretime alındı (rnd taslağı _retired\ altına arşivlendi).
-- roles\_retired\antigravity\rnd-image-photo.md arşivlendi.
-- Yönlendirme kuralı (İK önerisi): logo/ikon/rozet → image-generator (rnd-002 sonuçlanana kadar); editoryal/blog sahnesi, kitap/kapak illüstrasyonu → image-illustration; ürün/nesne fotoğrafı → image-generator. Belirsizse Yaratıcı Direktör karar verir.
-- Yedek: image-illustration → Claude (kod tabanlı, "kısıtlı" etiketiyle).
+## Implemented changes
+- roles\antigravity\image-illustration.md was moved to production (the rnd draft was archived under _retired\).
+- roles\_retired\antigravity\rnd-image-photo.md was archived.
+- Routing rule (HR proposal): logo/icon/badge → image-generator (until rnd-002 concludes); editorial/blog scene, book/cover illustration → image-illustration; product/object photo → image-generator. If unclear, the Creative Director decides.
+- Fallback: image-illustration → Claude (code-based, with the 'restricted' tag).
 
-## rnd-002 şartları (takip pilotu)
-Sadece logo + illüstrasyon; tür başına 4 brief × 3 varyant (genel / uzman / tek brief içinde tür bölümleri) = 24 çağrı, ~36k token tavanı. Kör puanlama: Yaratıcı Direktör + ikinci puanlayıcı. Üçüncü varyant kazanırsa rol bölmeye gerek kalmaz. Başlamadan önce `company.ps1 status` kontrolü.
+## rnd-002 terms (follow-up pilot)
+Logo + illustration only; 4 briefs per type × 3 variants (general / specialist / type sections within a single brief) = 24 calls, ~36k token cap. Blind scoring: Creative Director + second scorer. If the third variant wins, there will be no need to split roles. Check `company.ps1 status` before starting.
 
-## Finans notu (CEO)
-Yönetim katmanı pahalı: bu toplantı ve pilotta Claude ajanları ~241k token harcadı (Ar-Ge ~100k, İK ~74k, Finans ~68k), işçi görsel çağrıları ise ~17.7k. Bundan sonra küçük kararlar tek müdürle ya da doğrudan CEO tarafından verilmeli; toplantılar yalnızca yapısal kararlar için.
+## Finance note (CEO)
+The management layer is expensive: in this meeting and pilot, Claude agents spent ~241k tokens (R&D ~100k, HR ~74k, Finance ~68k), while worker image calls spent ~17.7k. From now on, minor decisions should be made with a single manager or directly by the CEO; meetings are only for structural decisions.

@@ -12,9 +12,9 @@ When reviewing worker output:
 2. Score each deliverable: meets brief / needs revision / rejected, with evidence.
 3. For revisions, name which agent/role should do it.
 4. Report to the CEO in this format:
-   - Özet (2-3 lines)
-   - Teslimler ve durumları
-   - Sorunlar
-   - Önerilen sonraki adım ve atanacak rol
-   - Finans: token usage from `company.ps1 status` for the agents involved
+   - Summary (2-3 lines)
+   - Deliverables and their status
+   - Problems
+   - Recommended next step and role to assign
+   - Finance: token usage from `company.ps1 status` for the agents involved
 Keep reports short. Never claim a visual is good without having inspected it.

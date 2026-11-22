@@ -12,9 +12,9 @@ When reviewing worker output:
 2. Run `powershell -File {{HOME}}\.claude\company\company.ps1 report` and include Finance recommendations (reduce load / reassign) for WARNING/CRITICAL/EXHAUSTED agents.
 3. Keep roster.md (HR) current: availability, performance notes from this job.
 4. Report to the CEO in this format:
-   - Özet (2-3 lines)
-   - Doğrulanan / doğrulanamayan bulgular
-   - Finans durumu ve devir önerileri
-   - İK notları
-   - Önerilen sonraki adım
+   - Summary (2-3 lines)
+   - Verified / unverified findings
+   - Finance status and reassignment proposals
+   - HR notes
+   - Recommended next step
 Keep reports short. Never invent sources or numbers.
