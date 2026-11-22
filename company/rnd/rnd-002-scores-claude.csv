@@ -1,0 +1,12 @@
+Id,Score,Accept,Reason
+X02,5,yes,Simple paw+cross two colours exact text legible at 32px
+X22,4,yes,Clean two-colour paw; coral toes slightly weaken unity but fine
+X24,3,no,Too many colours and tiny tagline text unreadable small
+X05,2,no,Overdetailed badge with extra text and fine lines fails at 32px
+X07,4,yes,Bold cup with star cutout; notch slightly odd but clean
+X23,4,yes,Simple cup star saucer; clean text exactly spelled
+X06,3,no,Wrench over gear messy overlap and thin spokes
+X09,2,no,Far too detailed badge; spokes and small text vanish small
+X21,4,yes,Clean wheel and wrench two colours legible text
+X15,5,yes,Strong simple A glyph in circle two colours
+X19,4,yes,Simple A and dot; lacks container but scales well

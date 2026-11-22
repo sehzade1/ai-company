@@ -1,0 +1,9 @@
+TASK R1 - Copy review. Check the Turkish product text against the SPEC and Turkish spelling/grammar/style. List every problem (numbered, one line each: problem -> fix). Do not rewrite the whole text.
+SPEC: Kuzey Harman; 250 g çekirdek kahve; fiyat 289 TL; orta kavrum; menşe Brezilya + Etiyopya; organik sertifikası YOK; 500 TL üzeri kargo ücretsiz; marka müşteriye "siz" diye hitap eder.
+TEXT: "Kuzey Harman, Brezilya ve Kolombiya çekirdeklerinin dengeli birleşimidir. Orta kavrulmuş çekirdekler, çikolata ve fındık notalarıyla güne yumuşak bir başlangıç sunar. Her paket 500 gram taze çekirdek içerir. %100 organik tarım ürünüdür. Sadece 289 TL! 300 TL üzeri siparişlerde kargo bedava. Bu harmanı bizde çok seviyoruz, siz de seveceksiniz. Herkez için ideal bir seçim. Hemen sepetine ekle ve farkı hisset."
+
+TASK R2 - Translation spot-check. Compare the Turkish translation with the English source. List every meaning error (numbered: what is wrong -> correct Turkish). Do not flag sentences that are correct.
+EN: "Free returns within 30 days. Items must be unused and in original packaging. Refunds are issued to the original payment method within 5 business days after we receive the item. Sale items cannot be returned, but can be exchanged once."
+TR: "60 gün içinde ücretsiz iade. Ürünler kullanılmamış ve orijinal ambalajında olmalıdır. İade, ürün elimize ulaşmadan önce 5 iş günü içinde banka hesabınıza yapılır. İndirimli ürünler iade edilemez ve değiştirilemez."
+
+Answer both tasks directly from the text above. Do not use any tools, do not read or write files. Format: "R1:" list, then "R2:" list.

@@ -1,0 +1,3 @@
+Answer both, one line each as 'P1: ...' and 'P2: ...', no explanation.
+P1: Four baristas - Ada, Bora, Cem, Deniz - each take exactly one shift: Mon, Tue, Wed, Thu. Ada works earlier in the week than Cem. Bora does not work Monday or Thursday. Deniz works the day right after Bora. Cem does not work Thursday. Give each person's day.
+P2: A 250 g bag costs 289 TL and a 1 kg bag costs 1,050 TL. How many TL do you save per kilogram by buying the 1 kg bag instead of four 250 g bags?

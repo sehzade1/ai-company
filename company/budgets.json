@@ -1,0 +1,53 @@
+{
+    "_note":  "dailyTokenBudget values are PLACEHOLDERS, not provider quotas. Set real plan limits. 0 = untracked. Codex counts are real; others are chars/4 estimates. Per-role fallbacks are in meeting/decision.md; the lists here are the agent-level default. Kimi is excluded from fallbacks until logged in and piloted. Kimi retired 2026-11-20 (no Kimi Code subscription); kept at budget 0 for history. 2026-11-22: user pays only for Claude and Gemini (Google AI Pro). Codex is on a non-paid plan with an unknown, low limit: budget set conservatively; on a Codex usage-limit error delegate exits 75 and work moves to Antigravity, then Claude.",
+    "thresholds":  {
+                       "warning":  70,
+                       "critical":  90
+                   },
+    "agents":  {
+                   "claude-opus":  {
+                                       "dailyTokenBudget":  0,
+                                       "fallback":  [
+                                                        "claude-sonnet"
+                                                    ]
+                                   },
+                   "claude-sonnet":  {
+                                         "dailyTokenBudget":  1000000,
+                                         "fallback":  [
+                                                          "antigravity",
+                                                          "codex"
+                                                      ]
+                                     },
+                   "claude-haiku":  {
+                                        "dailyTokenBudget":  0,
+                                        "fallback":  [
+                                                         "claude-sonnet"
+                                                     ]
+                                    },
+                   "codex":  {
+                                 "dailyTokenBudget":  250000,
+                                 "fallback":  [
+                                                  "antigravity",
+                                                  "claude-sonnet"
+                                              ]
+                             },
+                   "antigravity":  {
+                                       "dailyTokenBudget":  500000,
+                                       "fallback":  [
+                                                        "claude-sonnet"
+                                                    ]
+                                   },
+                   "kimi":  {
+                                "dailyTokenBudget":  0,
+                                "fallback":  [
+
+                                             ]
+                            },
+                   "local":  {
+                                 "dailyTokenBudget":  0,
+                                 "fallback":  [
+                                                  "claude-haiku"
+                                              ]
+                             }
+               }
+}

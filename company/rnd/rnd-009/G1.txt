@@ -1,0 +1,14 @@
+Answer from this CSV only, one line each as 'Q1: ...', no explanation.
+product,store,week,units,returns
+A,Kadikoy,1,50,2
+A,Besiktas,1,40,5
+B,Kadikoy,1,30,0
+B,Besiktas,1,45,3
+A,Kadikoy,2,55,1
+A,Besiktas,2,38,4
+B,Kadikoy,2,35,2
+B,Besiktas,2,50,6
+Q1: Total net units (units minus returns) over all rows?
+Q2: Return rate (returns / units) for store Besiktas over both weeks, in percent rounded to 1 decimal?
+Q3: Which product grew more in total units from week 1 to week 2, and by what percent rounded to 1 decimal? (format: product, percent)
+Q4: Median of the units column?

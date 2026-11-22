@@ -1,0 +1,386 @@
+import bpy
+import math
+from mathutils import Vector
+
+# Blender 5.1, run with:
+# blender --background --python this_script.py
+
+GLB_PATH = r'{{HOME}}\.claude\company\rnd\rnd-007\codex\T2.glb'
+PNG_PATH = r'{{HOME}}\.claude\company\rnd\rnd-007\codex\T2.png'
+
+# Dimensions are in meters. The chest base sits on z=0 and is centered at x=y=0.
+W, D = 0.60, 0.38
+BODY_H = 0.30
+LID_H = 0.12
+LID_ANGLE = math.radians(30.0)
+BEVEL = 0.018
+MODEL_COLLECTION_NAME = "Treasure Chest"
+
+
+def clear_scene():
+    bpy.ops.object.select_all(action="SELECT")
+    bpy.ops.object.delete(use_global=False)
+    for datablocks in (bpy.data.meshes, bpy.data.curves, bpy.data.materials,
+                       bpy.data.cameras, bpy.data.lights):
+        # Remove unused datablocks left by the default scene.
+        for datablock in list(datablocks):
+            if datablock.users == 0:
+                datablocks.remove(datablock)
+
+
+def make_material(name, color, metallic=0.0, roughness=0.5):
+    mat = bpy.data.materials.new(name)
+    mat.diffuse_color = (*color, 1.0)
+    mat.use_nodes = True
+    bsdf = mat.node_tree.nodes.get("Principled BSDF")
+    bsdf.inputs["Base Color"].default_value = (*color, 1.0)
+    bsdf.inputs["Metallic"].default_value = metallic
+    bsdf.inputs["Roughness"].default_value = roughness
+    return mat
+
+
+def move_to_collection(obj, collection):
+    for old_collection in list(obj.users_collection):
+        old_collection.objects.unlink(obj)
+    collection.objects.link(obj)
+
+
+def add_beveled_box(name, location, dimensions, material, bevel=BEVEL,
+                    collection=None):
+    bpy.ops.mesh.primitive_cube_add(size=1.0, location=location)
+    obj = bpy.context.object
+    obj.name = name
+    obj.dimensions = dimensions
+    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+    if material:
+        obj.data.materials.append(material)
+    if bevel > 0:
+        mod = obj.modifiers.new("Small softened edges", "BEVEL")
+        mod.width = bevel
+        mod.segments = 1
+        bpy.context.view_layer.objects.active = obj
+        bpy.ops.object.modifier_apply(modifier=mod.name)
+        norm = obj.modifiers.new("Weighted corner normals", "WEIGHTED_NORMAL")
+        bpy.ops.object.modifier_apply(modifier=norm.name)
+    if collection:
+        move_to_collection(obj, collection)
+    return obj
+
+
+def add_cylinder(name, location, radius, depth, material, vertices=12,
+                 rotation=None, collection=None):
+    bpy.ops.mesh.primitive_cylinder_add(
+        vertices=vertices, radius=radius, depth=depth,
+        end_fill_type="NGON", location=location
+    )
+    obj = bpy.context.object
+    obj.name = name
+    if rotation is not None:
+        obj.rotation_euler = rotation
+    if material:
+        obj.data.materials.append(material)
+    bevel = obj.modifiers.new("Coin edge bevel", "BEVEL")
+    bevel.width = min(0.002, depth * 0.15)
+    bevel.segments = 1
+    bpy.context.view_layer.objects.active = obj
+    bpy.ops.object.modifier_apply(modifier=bevel.name)
+    if collection:
+        move_to_collection(obj, collection)
+    return obj
+
+
+def add_lid_box(name, local_center, dimensions, material, collection,
+                bevel=BEVEL):
+    """Make a beveled lid part, then rotate it about the back hinge line."""
+    obj = add_beveled_box(name, (0, 0, 0), dimensions, material, bevel)
+    # Build the lid in its closed pose. Hinge axis runs across X at y=+D/2.
+    closed_center = Vector((local_center[0], local_center[1], local_center[2]))
+    hinge = Vector((0.0, D / 2.0, BODY_H))
+    angle = -LID_ANGLE
+    c, s = math.cos(angle), math.sin(angle)
+
+    for vertex in obj.data.vertices:
+        p = vertex.co + closed_center - hinge
+        # Rotation about X: negative angle raises the front (negative-Y) edge.
+        y = p.y * c - p.z * s
+        z = p.y * s + p.z * c
+        vertex.co = (p.x, y + hinge.y, z + hinge.z)
+
+    obj.data.update()
+    move_to_collection(obj, collection)
+    return obj
+
+
+def add_wood_slats(collection):
+    # Raised inset panels and narrow seams give the body a plank-built look.
+    plank_count = 5
+    plank_w = W / plank_count
+    for side, y in (("Front", -D / 2 - 0.006), ("Back", D / 2 + 0.006)):
+        for i in range(plank_count):
+            x = -W / 2 + (i + 0.5) * plank_w
+            add_beveled_box(
+                f"{side} oak plank {i + 1}",
+                (x, y, BODY_H * 0.52),
+                (plank_w - 0.008, 0.018, BODY_H * 0.82),
+                wood_light if i % 2 == 0 else wood,
+                bevel=0.006,
+                collection=collection,
+            )
+
+    for side, x in (("Left", -W / 2 - 0.006), ("Right", W / 2 + 0.006)):
+        for i in range(3):
+            y = -D / 2 + (i + 0.5) * D / 3
+            add_beveled_box(
+                f"{side} end plank {i + 1}",
+                (x, y, BODY_H * 0.52),
+                (0.018, D / 3 - 0.008, BODY_H * 0.82),
+                wood_dark if i == 1 else wood,
+                bevel=0.006,
+                collection=collection,
+            )
+
+
+def add_lid_slats(collection):
+    # Subtle top strips follow the open lid's rotation around its rear hinge.
+    count = 5
+    strip_w = W / count
+    center_y = 0.0
+    center_z = BODY_H + LID_H * 0.5
+    for i in range(count):
+        x = -W / 2 + (i + 0.5) * strip_w
+        add_lid_box(
+            f"Lid oak strip {i + 1}",
+            (x, center_y, center_z),
+            (strip_w - 0.006, D - 0.018, 0.018),
+            wood_light if i % 2 == 0 else wood,
+            collection,
+            bevel=0.005,
+        )
+
+
+def add_band_path(name, x_center, width, collection, lid=False):
+    """Create an iron strap as connected low-poly cuboids around front/top/back."""
+    strap_w = width
+    thickness = 0.014
+    if not lid:
+        # Three visible pieces form a strap over the front, top rim, and back.
+        add_beveled_box(f"{name} front", (x_center, -D / 2 - 0.010, BODY_H * 0.52),
+                        (strap_w, thickness, BODY_H * 0.98), metal, 0.004, collection)
+        add_beveled_box(f"{name} bottom", (x_center, 0, 0.012),
+                        (strap_w, D + 0.015, thickness), metal, 0.004, collection)
+        add_beveled_box(f"{name} rear", (x_center, D / 2 + 0.010, BODY_H * 0.52),
+                        (strap_w, thickness, BODY_H * 0.98), metal, 0.004, collection)
+        for side in (-1, 1):
+            add_beveled_box(
+                f"{name} side return {side}",
+                (x_center, side * (D / 2 - 0.004), BODY_H * 0.52),
+                (strap_w, 0.025, BODY_H * 0.98), metal, 0.004, collection
+            )
+    else:
+        # A matching band crosses the lid top and wraps around its front edge.
+        add_lid_box(
+            f"{name} lid top", (x_center, 0, BODY_H + LID_H + 0.003),
+            (strap_w, D - 0.010, thickness), metal, collection, bevel=0.003
+        )
+        # Front skirt attached to the lid, placed in its closed-pose coordinates.
+        add_lid_box(
+            f"{name} lid front", (x_center, -D / 2 + 0.005, BODY_H + LID_H / 2),
+            (strap_w, thickness, LID_H + 0.02), metal, collection, bevel=0.003
+        )
+
+
+def add_coin(x, y, z, radius, height, material, collection, tilt=0.0):
+    add_cylinder(
+        "Visible gold coin", (x, y, z), radius, height, material, vertices=12,
+        rotation=(tilt, 0, 0), collection=collection
+    )
+
+
+def add_area_light(name, location, energy, size, target):
+    data = bpy.data.lights.new(name, type="AREA")
+    data.energy = energy
+    data.shape = "DISK"
+    data.size = size
+    obj = bpy.data.objects.new(name, data)
+    bpy.context.scene.collection.objects.link(obj)
+    obj.location = location
+    obj.rotation_euler = (Vector(target) - obj.location).to_track_quat("-Z", "Y").to_euler()
+    return obj
+
+
+def point_camera(camera, target):
+    camera.rotation_euler = (Vector(target) - camera.location).to_track_quat("-Z", "Y").to_euler()
+
+
+# Create the materials after clearing the scene so their datablocks remain valid.
+clear_scene()
+wood = make_material("Warm oak", (0.28, 0.105, 0.035), roughness=0.62)
+wood_light = make_material("Oak highlights", (0.43, 0.19, 0.065), roughness=0.58)
+wood_dark = make_material("Oak end grain", (0.19, 0.062, 0.022), roughness=0.72)
+metal = make_material("Dark forged iron", (0.055, 0.068, 0.075),
+                      metallic=0.78, roughness=0.3)
+gold = make_material("Coin gold", (0.83, 0.48, 0.075),
+                     metallic=0.82, roughness=0.24)
+gold_light = make_material("Coin edge highlights", (1.0, 0.68, 0.19),
+                           metallic=0.75, roughness=0.22)
+
+# Start with a clean scene and make a named collection for chest geometry.
+scene = bpy.context.scene
+model_collection = bpy.data.collections.new(MODEL_COLLECTION_NAME)
+scene.collection.children.link(model_collection)
+
+# Main box and inner cavity: visible inner floor and rim make the open chest read clearly.
+add_beveled_box("Solid wooden chest body", (0, 0, BODY_H / 2),
+                (W, D, BODY_H), wood, bevel=0.014, collection=model_collection)
+add_beveled_box("Dark interior lining", (0, 0, BODY_H - 0.023),
+                (W - 0.035, D - 0.035, 0.018), wood_dark, bevel=0.006,
+                collection=model_collection)
+add_wood_slats(model_collection)
+
+# Raised lip around the opening.
+lip_h = 0.025
+lip_z = BODY_H - lip_h / 2
+for x in (-W / 2 + 0.012, W / 2 - 0.012):
+    add_beveled_box("Opening side rim", (x, 0, lip_z),
+                    (0.020, D - 0.025, lip_h), wood_light, 0.004, model_collection)
+for y in (-D / 2 + 0.012, D / 2 - 0.012):
+    add_beveled_box("Opening end rim", (0, y, lip_z),
+                    (W - 0.040, 0.020, lip_h), wood_light, 0.004, model_collection)
+
+# Lid, about 30 degrees open. Its origin remains part of the same world-space model.
+add_lid_box("Thick open lid", (0, 0, BODY_H + LID_H / 2),
+            (W, D, LID_H), wood, model_collection, bevel=0.018)
+add_lid_slats(model_collection)
+
+# Three dark iron bands across the body and matching bands on the lid.
+for x in (-0.20, 0.0, 0.20):
+    add_band_path("Body iron band", x, 0.040, model_collection, lid=False)
+    add_band_path("Lid iron band", x, 0.040, model_collection, lid=True)
+
+# Front lock plate. Camera is positioned on the negative-Y side.
+plate = add_beveled_box("Dark iron lock plate", (0, -D / 2 - 0.022, 0.205),
+                        (0.095, 0.022, 0.105), metal, 0.008, model_collection)
+add_beveled_box("Lock plate raised center", (0, -D / 2 - 0.036, 0.207),
+                (0.052, 0.009, 0.062), wood_dark, 0.004, model_collection)
+add_cylinder("Lock keyhole upper", (0, -D / 2 - 0.043, 0.218),
+             0.010, 0.008, metal, vertices=12,
+             rotation=(math.radians(90), 0, 0), collection=model_collection)
+add_beveled_box("Lock keyhole slot", (0, -D / 2 - 0.044, 0.199),
+                (0.008, 0.008, 0.028), metal, 0.003, model_collection)
+
+# Iron rivets along the front straps and lock plate.
+for x in (-0.20, 0.20):
+    for z in (0.055, 0.27):
+        add_cylinder("Iron rivet", (x, -D / 2 - 0.021, z), 0.008, 0.008,
+                     metal, vertices=10, rotation=(math.radians(90), 0, 0),
+                     collection=model_collection)
+for x in (-0.034, 0.034):
+    for z in (0.169, 0.243):
+        add_cylinder("Lock plate rivet", (x, -D / 2 - 0.038, z), 0.005, 0.006,
+                     gold_light, vertices=10, rotation=(math.radians(90), 0, 0),
+                     collection=model_collection)
+
+# A small, irregular pile of coins sitting inside the open cavity.
+coin_positions = [
+    (-0.12, -0.07, 0.286, 0.036, 0.009, -0.14),
+    (-0.045, -0.085, 0.289, 0.032, 0.010, 0.12),
+    (0.035, -0.055, 0.288, 0.038, 0.010, -0.08),
+    (0.115, -0.075, 0.287, 0.030, 0.009, 0.20),
+    (-0.08, 0.015, 0.295, 0.034, 0.010, 0.18),
+    (0.00, 0.020, 0.298, 0.039, 0.011, -0.12),
+    (0.09, 0.005, 0.294, 0.035, 0.010, 0.10),
+    (-0.035, 0.085, 0.300, 0.032, 0.010, -0.20),
+    (0.055, 0.075, 0.302, 0.031, 0.010, 0.16),
+]
+for i, (x, y, z, r, h, tilt) in enumerate(coin_positions):
+    add_coin(x, y, z, r, h, gold if i % 3 else gold_light,
+             model_collection, tilt)
+# A couple of coins stand at an angle in the back of the pile.
+add_coin(-0.13, 0.105, 0.323, 0.030, 0.009, gold_light,
+         model_collection, tilt=math.radians(58))
+add_coin(0.125, 0.09, 0.321, 0.028, 0.009, gold,
+         model_collection, tilt=math.radians(-54))
+
+# Neutral studio world/background.
+world = bpy.data.worlds.new("Light grey studio world") if scene.world is None else scene.world
+scene.world = world
+world.use_nodes = True
+world.node_tree.nodes["Background"].inputs["Color"].default_value = (0.72, 0.74, 0.77, 1)
+world.node_tree.nodes["Background"].inputs["Strength"].default_value = 0.8
+
+# Soft studio lighting.
+focus = (0, 0, 0.29)
+add_area_light("Large soft key", (-1.4, -1.8, 1.8), 420, 1.5, focus)
+add_area_light("Front fill", (1.5, -1.0, 1.0), 240, 1.2, focus)
+add_area_light("Warm rim", (0.4, 1.1, 1.6), 520, 1.0, focus)
+
+# Three-quarter camera view from the front and right.
+camera_data = bpy.data.cameras.new("Preview camera")
+camera = bpy.data.objects.new("Preview camera", camera_data)
+scene.collection.objects.link(camera)
+camera.location = (1.05, -1.55, 0.92)
+point_camera(camera, (0, 0, 0.31))
+camera_data.type = "ORTHO"
+camera_data.ortho_scale = 0.91
+camera_data.lens = 50
+scene.camera = camera
+
+# Render settings.
+scene.render.engine = "CYCLES"
+scene.cycles.samples = 32
+scene.cycles.use_denoising = True
+scene.render.resolution_x = 1024
+scene.render.resolution_y = 1024
+scene.render.resolution_percentage = 100
+scene.render.image_settings.file_format = "PNG"
+scene.render.image_settings.color_mode = "RGBA"
+scene.render.filepath = PNG_PATH
+scene.render.film_transparent = False
+scene.view_settings.view_transform = "AgX"
+scene.render.image_settings.color_depth = "8"
+
+# Export the model collection only, so the GLB contains no camera or studio lights.
+bpy.ops.object.select_all(action="DESELECT")
+for obj in model_collection.objects:
+    obj.select_set(True)
+bpy.context.view_layer.objects.active = next(
+    obj for obj in model_collection.objects if obj.type == "MESH"
+)
+bpy.ops.export_scene.gltf(
+    filepath=GLB_PATH,
+    export_format="GLB",
+    use_selection=True,
+    export_cameras=False,
+    export_lights=False,
+    export_apply=True,
+)
+
+# Render the preview with camera and lights in place.
+bpy.ops.object.select_all(action="DESELECT")
+scene.render.filepath = PNG_PATH
+bpy.ops.render.render(write_still=True)
+
+# Report evaluated triangle count and overall chest dimensions, excluding studio gear.
+depsgraph = bpy.context.evaluated_depsgraph_get()
+triangle_count = 0
+mesh_bounds = []
+for obj in model_collection.objects:
+    if obj.type != "MESH":
+        continue
+    evaluated = obj.evaluated_get(depsgraph)
+    mesh = evaluated.to_mesh()
+    triangle_count += sum(max(0, len(poly.vertices) - 2) for poly in mesh.polygons)
+    for corner in mesh.vertices:
+        mesh_bounds.append(obj.matrix_world @ corner.co)
+    evaluated.to_mesh_clear()
+
+if mesh_bounds:
+    mins = [min(v[i] for v in mesh_bounds) for i in range(3)]
+    maxs = [max(v[i] for v in mesh_bounds) for i in range(3)]
+    dimensions = [maxs[i] - mins[i] for i in range(3)]
+    print(f"Triangle count: {triangle_count}")
+    print("Object dimensions (m): "
+          f"{dimensions[0]:.4f} x {dimensions[1]:.4f} x {dimensions[2]:.4f}")
+else:
+    print("Triangle count: 0")
+    print("Object dimensions (m): 0 x 0 x 0")

@@ -1,0 +1,2 @@
+﻿Translate into natural, fluent Turkish for a customer email. Keep the brand name Kuzey Kahve and the code BEAN10 unchanged. Return only the translation.
+"Heads up: we're running a bit behind this week. Our roaster broke down on Tuesday, so orders placed after Monday will ship on Friday instead of Wednesday. We know that's a pain, and we're sorry. As a thank-you for your patience, use code BEAN10 for 10% off your next order — no strings attached. If you'd rather cancel, just hit reply and we'll refund you, no questions asked."

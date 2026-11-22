@@ -1,0 +1,10 @@
+﻿Review this JavaScript function and list every bug you find (numbered, one line each, with the fix). Do not rewrite the whole function. Documented contract: returns active users sorted by age ascending, page is 1-based, pages = number of pages needed, avgAge = average age of active users (0 if none). Input users are not to be modified.
+
+function pageUsers(users, page, pageSize) {
+  const active = users.filter(u => u.active = true);
+  active.sort((a, b) => a.age > b.age);
+  const start = page * pageSize;
+  const items = active.slice(start, start + pageSize - 1);
+  const avgAge = active.reduce((s, u) => s + u.age) / active.length;
+  return { items, total: active.length, pages: Math.floor(active.length / pageSize), avgAge };
+}

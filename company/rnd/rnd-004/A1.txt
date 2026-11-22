@@ -1,0 +1,19 @@
+﻿Answer from this CSV only. Give each answer on its own line as 'Q1: ...' etc, numbers only where asked, no explanation.
+month,region,product,units,unit_price
+Jan,North,Filter,120,8.5
+Jan,South,Espresso,80,11
+Jan,North,Espresso,60,11
+Feb,South,Filter,140,8.5
+Feb,North,ColdBrew,40,14
+Feb,South,Espresso,95,11
+Mar,North,Filter,110,8.5
+Mar,South,ColdBrew,70,14
+Mar,North,Espresso,75,11
+Apr,South,Filter,160,8.5
+Apr,North,ColdBrew,55,14
+Apr,South,Espresso,100,11
+Q1: Total revenue (units*unit_price) across all rows?
+Q2: Which product has the highest total revenue?
+Q3: Revenue of the South region minus revenue of the North region?
+Q4: In which month did total units grow the most versus the previous month, and by how many units? (format: Month, number)
+Q5: Average units per row for Espresso, rounded to 2 decimals?

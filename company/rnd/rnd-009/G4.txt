@@ -1,0 +1,2 @@
+Translate into clear, natural English for a technical README. Keep code names and units unchanged. Return only the translation.
+"Kavurma makinesi her 30 saniyede bir sıcaklığı ölçer ve verileri yerel ağ üzerinden sunucuya gönderir. Bağlantı koparsa cihaz son 2 saatlik ölçümü kendi belleğinde tutar ve bağlantı geri geldiğinde bunları sırayla yükler. Sıcaklık 230 °C'yi geçerse `overheat` olayı tetiklenir ve brülör otomatik olarak kısılır; bu eşik `config.yaml` dosyasından değiştirilebilir, ancak 250 °C'nin üzerine çıkarılamaz."

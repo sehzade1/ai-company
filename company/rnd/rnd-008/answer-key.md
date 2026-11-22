@@ -1,0 +1,2 @@
+R1 key (7): 1 origin Kolombiya -> Etiyopya; 2 500 gram -> 250 gram; 3 '%100 organik' unsupported (no certificate) -> remove; 4 kargo threshold 300 -> 500 TL; 5 'bizde' -> 'biz de'; 6 'Herkez' -> 'Herkes'; 7 'sepetine ekle ... hisset' uses sen, brand uses siz -> 'sepetinize ekleyin ... hissedin'.
+R2 key (4): 1 60 -> 30 gün; 2 'ulaşmadan önce' -> 'ulaştıktan sonra'; 3 'banka hesabınıza' -> 'orijinal ödeme yönteminize'; 4 'değiştirilemez' -> 'bir kez değiştirilebilir'. False positive trap: sentence 2 is correct.

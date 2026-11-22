@@ -1,0 +1,35 @@
+Find every bug in this JavaScript code against its documented contract. List them numbered, one line each: location, why it is wrong, fix. Do not rewrite the code.
+Contract: LruTtl - get(key) returns the value or undefined; an entry is expired when its age >= ttlMs; expired entries count as missing and must be removed. set(key,value) inserts or updates and makes the key most-recent; when the size exceeds capacity, evict the least-recently-used entry. makeLimiter - allow(user) returns true if the user made fewer than `limit` allowed calls in the window (t - windowMs, t], and records the call; user ids are arbitrary strings.
+
+class LruTtl {
+  constructor(capacity, ttlMs, now = Date.now) {
+    this.capacity = capacity; this.ttl = ttlMs; this.now = now; this.map = new Map();
+  }
+  get(key) {
+    const e = this.map.get(key);
+    if (!e) return undefined;
+    if (this.now() - e.t > this.ttl) { return undefined; }
+    this.map.delete(key); this.map.set(key, e);
+    return e.v;
+  }
+  set(key, value) {
+    this.map.set(key, { v: value, t: this.now() });
+    if (this.map.size >= this.capacity) {
+      const oldest = this.map.keys().next().value;
+      this.map.delete(oldest);
+    }
+  }
+}
+
+function makeLimiter(limit, windowMs, now = Date.now) {
+  const hits = {};
+  return function allow(user) {
+    const t = now();
+    const list = hits[user] || [];
+    while (list.length && list[0] < t - windowMs) list.shift();
+    if (list.length > limit) return false;
+    list.push(t);
+    hits[user] = list;
+    return true;
+  };
+}
