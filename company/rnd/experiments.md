@@ -23,3 +23,4 @@
 - rnd-008 (2026-11-22) Haiku vs Sonnet reviews: DONE -> Haiku equal accuracy (7/7, 4/4), cleaner output; copy + translation reviews go to Haiku. Subagent overhead ~50k tokens either way. See rnd\rnd-008\results.md.
 - rnd-009 (2026-11-22) Gemini larger sample: DONE -> all 3 models equal on accuracy (4 tasks); hydrogen fastest, stays default; fallback order flash then neon. See rnd\rnd-009\results.md.
 - rnd-010 (2026-11-22) systematic-debugging text in Gemini briefs: DONE -> no gain at ceiling (base 28/28 vs method 27/28), ~7x prompt tokens; skills stay for Claude sessions only. See rnd\rnd-010\results.md.
+- rnd-011 (2026-11-22) wshobson role briefs on Codex: DONE -> ours 29/32 vs wshobson 27/32 with ~40% more tokens; keep ours, wshobson = catalogue for missing roles. See rnd\rnd-011\results.md.

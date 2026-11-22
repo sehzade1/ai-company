@@ -133,3 +133,6 @@ hydrogen-high, neon-high and flash-medium tied on 4 more objective tasks; hydrog
 
 ## Addendum 2026-11-22: adopted working-method skills (obra/superpowers) + rnd-010
 Installed 8 adapted skills (brainstorming, systematic-debugging, test-driven-development, writing-plans, verification-before-completion, requesting/receiving-code-review, dispatching-parallel-agents); executing-plans skipped (depends on an uninstalled skill). rnd-010: pasting the debugging method into a Gemini brief gave no gain and ~7x prompt size, so the methods are for Claude sessions only. Notices: THIRD_PARTY_NOTICES.md.
+
+## Addendum 2026-11-22: wshobson/agents (rnd-011)
+wshobson review/security briefs on Codex scored 27/32 vs our briefs 29/32 with ~40% more tokens. Not adopted; used later as a catalogue for missing roles (cloud, incident response, observability, DB migration), each tested first. Details: rnd\rnd-011\results.md

@@ -8,24 +8,24 @@ answer-keyed R&D experiments that are included in this repo.
 
 > **This is one user's configuration, not a fixed product.** The model assignments below fit the
 > author's subscriptions (Claude and Gemini paid, Codex on a free plan). Every role, model, budget
-> and even the CEO can be changed — see [Customize it](#customize-it-for-your-own-setup).
+> and even the CEO can be changed â€” see [Customize it](#customize-it-for-your-own-setup).
 
 ## Organisation (as configured by the author)
 
 ```
-CEO (main Claude Code session — Claude Opus here)
-├── Directors (Claude Sonnet): Engineering, Creative, Operations, R&D
-│   └── under Operations: HR (Haiku), Finance (Sonnet)
-└── Workers
-    ├── Claude:  test writer, security auditor, frontend, UI/UX, copywriter, bulk drafter, prompt engineer
-    ├── Codex (gpt-6-luna, read-only): backend, bug finder, refactoring, performance, code reviewer
-    ├── Antigravity/Gemini (gemini-4-hydrogen-high): research, data analysis, translation,
-    │   technical writing, accessibility, images (logo specialist + general), 3D (Blender scripts)
-    └── Local: Ollama gemma3:12b (private data, translation drafts), ComfyUI FLUX (fallback images)
+CEO (main Claude Code session â€” Claude Opus here)
+â”œâ”€â”€ Directors (Claude Sonnet): Engineering, Creative, Operations, R&D
+â”‚   â””â”€â”€ under Operations: HR (Haiku), Finance (Sonnet)
+â””â”€â”€ Workers
+    â”œâ”€â”€ Claude:  test writer, security auditor, frontend, UI/UX, copywriter, bulk drafter, prompt engineer
+    â”œâ”€â”€ Codex (gpt-6-luna, read-only): backend, bug finder, refactoring, performance, code reviewer
+    â”œâ”€â”€ Antigravity/Gemini (gemini-4-hydrogen-high): research, data analysis, translation,
+    â”‚   technical writing, accessibility, images (logo specialist + general), 3D (Blender scripts)
+    â””â”€â”€ Local: Ollama gemma3:12b (private data, translation drafts), ComfyUI FLUX (fallback images)
 ```
 
 Workers never report to the CEO directly: a director verifies their output first. Details:
-[`company/ORG.md`](company/ORG.md) · decisions: [`company/meeting/decision.md`](company/meeting/decision.md) ·
+[`company/ORG.md`](company/ORG.md) Â· decisions: [`company/meeting/decision.md`](company/meeting/decision.md) Â·
 experiments: [`company/rnd/`](company/rnd/).
 
 ## R&D findings that shaped the setup
@@ -40,6 +40,7 @@ experiments: [`company/rnd/`](company/rnd/).
 | rnd-007 | 3D: Antigravity's Blender scripts ran first try 2/2 (Codex 1/2) |
 | rnd-008 | For checklist-style reviews Haiku matched Sonnet; every Claude subagent call carries ~50k tokens of overhead |
 | rnd-010 | Pasting a debugging method into a Gemini brief gave no gain at ceiling (28/28 vs 27/28) and ~7x prompt size, so method skills stay in Claude sessions |
+| rnd-011 | wshobson/agents review briefs on Codex: 27/32 vs our own briefs 29/32, with ~40% more tokens; ours kept |
 
 ## Adopted from other repos
 
@@ -65,7 +66,7 @@ are in English.
    ```
    It copies everything into `%USERPROFILE%\.claude`, backs up any file it replaces to
    `%USERPROFILE%\.claude\backup-<timestamp>`, and fills the `{{HOME}}` placeholders with your path.
-3. Install the agents you want — all optional; work for a missing agent goes to its fallback:
+3. Install the agents you want â€” all optional; work for a missing agent goes to its fallback:
    - OpenAI Codex CLI, Google Antigravity CLI (`agy`)
    - Ollama + `gemma3:12b` (local text), ComfyUI + FLUX.1-schnell (local images)
    - Blender (3D), Python 3 with Pillow, numpy, scipy (transparent-PNG tool)
@@ -88,7 +89,7 @@ Codex", "add a video-editing department") and it updates the files below; or edi
 
 | What to change | Where |
 |---|---|
-| **The CEO** — e.g. Claude Fable or another model | The CEO is simply the main session: pick it with `/model`. Update the CEO line in `company/ORG.md` and `claude/CLAUDE.md` so the docs match. |
+| **The CEO** â€” e.g. Claude Fable or another model | The CEO is simply the main session: pick it with `/model`. Update the CEO line in `company/ORG.md` and `claude/CLAUDE.md` so the docs match. |
 | Directors' and managers' models | `model:` in `claude/agents/director-*.md`, `manager-*.md` |
 | Claude workers' models | `model:` in `claude/agents/worker-claude-*.md` |
 | Codex / Gemini worker models and effort | `model:` / `effort:` in `company/roles/<agent>/<role>.md` |

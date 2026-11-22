@@ -1,0 +1,22 @@
+Security review of this Express.js code (express-session and a sqlite db helper are configured elsewhere; sha256 is a plain hash helper). List every security or reliability issue, numbered, one line each with severity and fix. No rewrite.
+
+app.get('/files/:name', (req, res) => {
+  const p = path.join(__dirname, 'uploads', req.params.name);
+  res.sendFile(p);
+});
+app.post('/login', async (req, res) => {
+  const { user, pass } = req.body;
+  const row = await db.get(`SELECT * FROM users WHERE name = '${user}'`);
+  if (row && row.pass === sha256(pass)) {
+    req.session.user = row.name;
+    return res.json({ ok: true });
+  }
+  res.status(401).json({ ok: false, error: 'no user ' + user });
+});
+app.delete('/admin/users/:id', async (req, res) => {
+  if (req.session.user) {
+    await db.run('DELETE FROM users WHERE id = ' + req.params.id);
+    res.send('deleted');
+  }
+});
+app.use((err, req, res, next) => res.status(500).send(err.stack));
