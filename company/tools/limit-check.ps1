@@ -10,6 +10,15 @@
 $exe = Join-Path $env:USERPROFILE '.claude\company\vendor\ccusage\node_modules\@ccusage\ccusage-win32-x64\bin\ccusage.exe'
 if (-not (Test-Path $exe)) { Write-Output 'ccusage not installed'; exit 1 }
 $ErrorActionPreference = 'Continue'
+# Weekly brake (rolling 7 days, API-equivalent USD from local logs)
+$brake = 200
+try { $bj = Get-Content (Join-Path $env:USERPROFILE '.claude\company\budgets.json') -Raw | ConvertFrom-Json; if ($bj.claudeWeekly.loopBrakeUsd) { $brake = [double]$bj.claudeWeekly.loopBrakeUsd } } catch {}
+$since = (Get-Date).AddDays(-6).ToString('yyyyMMdd')
+$wraw = & $exe claude daily --offline --json --since $since 2>$null | Out-String
+$week = 0.0; try { $week = (($wraw | ConvertFrom-Json).daily | Measure-Object totalCost -Sum).Sum } catch {}
+Write-Output ("weekly_usd: {0:N2}" -f $week)
+Write-Output ("weekly_brake_usd: {0}" -f $brake)
+Write-Output ("weekly_brake_hit: {0}" -f ($week -ge $brake))
 $raw = & $exe blocks --active --offline --json 2>$null | Out-String
 try { $b = ($raw | ConvertFrom-Json).blocks | Where-Object { $_.isActive } | Select-Object -First 1 } catch { $b = $null }
 if (-not $b) { Write-Output 'no_active_block: usage window is free (resume now)'; exit 0 }

@@ -43,3 +43,5 @@ Workers sandboxed by default; no bypass/write-escalation flags without the user'
 - Background work: never write an open-ended wait loop on a job's output; wait for the completion notification or the exit marker, always with a timeout. (Incident 2026-11-22: a crashed Godot test never printed its summary and a subagent blocked forever.)
 
 - Long project from a master list: use the `producer-loop` skill (Gemini Producer gives the prompts, CEO executes, major decisions batched for the user).
+
+- Reviews by directors go to Gemini first: `company.ps1 delegate -Agent antigravity -Role director-engineering (Gemini)|director-creative|director-operations|director-rnd`, with test output/diffs attached. Claude director subagents only if Gemini is unavailable. Routine execution belongs to the General Manager (Sonnet); keep Opus for strategy.

@@ -49,5 +49,10 @@
                                                   "claude-haiku"
                                               ]
                              }
-               }
+               },
+    "claudeWeekly":  {
+                         "loopBrakeUsd":  200,
+                         "window":  "rolling 7 days",
+                         "note":  "2026-11-27: the weekly Claude limit was hit after ~317 USD API-equivalent (Nov 20-24, Opus-heavy). The autonomous loop stops at 200 USD per rolling 7 days, leaving ~1/3 for interactive work. Measured with ccusage (real local logs)."
+                     }
 }

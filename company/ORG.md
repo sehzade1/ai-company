@@ -86,3 +86,6 @@ Game project: godot MCP (Coding-Solo/godot-mcp 0.1.1, pinned, local stdio; insta
 
 ## Producer loop (autonomous projects)
 Gemini (role `antigravity/producer`) reads the user's master list, the checkpoint and the CEO's last report, reviews the work and writes the next prompt(s); minor decisions it takes itself, major ones go to `production/bekleyen-kararlar.md` for the user to answer in one batch. The CEO executes with the company, reports, repeats until the list is done. Tools: `tools\producer.ps1` (next | brainstorm), `tools\limit-check.ps1` (Claude 5-hour block end via ccusage; resume = end + 1 min). Skill: `producer-loop`; start in the project session with `/loop /producer-loop`.
+
+## Structure update 2026-11-27: General Manager + Gemini directors
+The weekly Claude limit was hit after ~317 USD API-equivalent in 5 days; 63% of the game session's cost was the Opus main session re-reading a growing context in one long autonomous loop. New structure: CEO = Claude Opus (strategy, escalations only); **General Manager = Claude Sonnet** (runs the loop and carries the work, one package per fresh headless session: `tools\loop-runner.ps1`); **Directors = Gemini** (role files `roles\antigravity\director-*.md`; Claude `director-*` subagents are fallback only). Weekly brake: `budgets.json` claudeWeekly.loopBrakeUsd = 200 per rolling 7 days.

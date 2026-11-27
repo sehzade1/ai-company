@@ -5,6 +5,13 @@ description: Run a project autonomously from the user's master list with the Gem
 
 # Producer loop (AI company)
 
+## Who runs it (2026-11-27, after the weekly Claude limit was hit)
+- **CEO = Claude Opus**: strategy, planning, major/escalated decisions only. Not used for routine packages.
+- **General Manager = Claude Sonnet**: runs the loop and carries the work (one work package per fresh headless session via `tools\loop-runner.ps1`; state lives in files, so no long conversation is re-read).
+- **Directors = Gemini** (`company.ps1 delegate -Agent antigravity -Role director-engineering|creative|operations|rnd`): review work; the GM attaches test output and diffs because Gemini cannot run commands or write files headless. Claude director subagents are only the fallback (exit 75).
+- **Brakes**: 5-hour block (resume at end + 1 min) and the weekly brake (`budgets.json` claudeWeekly.loopBrakeUsd, rolling 7 days); the runner schedules its own resume in Task Scheduler (task `AICompany-ProducerLoop`).
+- Start: `powershell -File {{HOME}}\.claude\company\tools\loop-runner.ps1` (or `-DryRun` to check). In an interactive session `/loop /producer-loop` still works, but run it with `/model sonnet`.
+
 You are the CEO (Claude). The Producer is Gemini (role `antigravity/producer`), called through
 `{{HOME}}\.claude\company\tools\producer.ps1`. The user's master list is the source of truth
 (default: `system game/docs/YOL_HARITASI.md`, current "Kontrol Noktası" section). Work happens in the
